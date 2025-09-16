@@ -1,26 +1,28 @@
 import yfinance as yf
 
-print("Dividend Tracking Stocks:")
-print(" ")
-stock_symbol = ["PSEC","O","MAIN","MULN"]
-stock_number = [3338.057, 1001.078, 100.003, 307100]
-total_dividends = 0
+print("Dividend Tracking Stocks:\n")
 
-for i in stock_symbol:
+stock_symbols = ["KO", "MTN", "GOOGL", "MSFT"]
+stock_numbers = [10.0, 10, 4, 2]
+
+total_dividends = 0.0
+
+# Iterate with both symbol and number together
+for symbol, number in zip(stock_symbols, stock_numbers):
     try:
-        
-        stock_info = yf.Ticker(i)
+        stock_info = yf.Ticker(symbol)
         dividends_history = stock_info.dividends
-        print(i) #Monthly Dividend
-        #print(dividends_history[-1])
-        index = stock_symbol.index(i)
-        print(stock_number[index] * dividends_history[-1])
-        print(" ")
-        total_dividends += stock_number[index] * dividends_history[-1]
-    except:
-        print(0.00)
-        pass
 
-print(" ")
-print("Total Dividends:")
-print(total_dividends)
+        if not dividends_history.empty:
+            last_dividend = dividends_history.iloc[-1]  # label position access
+            dividend_value = number * last_dividend
+            print(f"{symbol}: {dividend_value:.2f}")
+            total_dividends += dividend_value
+        else:
+            print(f"{symbol}: 0.00 (no dividend data)")
+    except Exception as e:
+        print(f"{symbol}: 0.00 (error: {e})")
+        continue
+
+print("\nTotal Dividends:")
+print(f"{total_dividends:.2f}")
